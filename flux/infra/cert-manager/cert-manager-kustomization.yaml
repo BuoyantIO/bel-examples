@@ -8,5 +8,5 @@ spec:
   sourceRef:
     kind: GitRepository
     name: bel-examples
-  path: cert-manager/
+  path: flux/infra/cert-manager/
   prune: true
