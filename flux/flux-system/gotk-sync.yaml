@@ -3,7 +3,7 @@
 apiVersion: source.toolkit.fluxcd.io/v1
 kind: GitRepository
 metadata:
-  name: bel-examples
+  name: flux-system
   namespace: flux-system
 spec:
   interval: 1m0s
@@ -13,7 +13,7 @@ spec:
     name: flux-system
   url: ssh://git@github.com:22/BuoyantIO/bel-examples.git
 ---
-apiVersion: kustomize.config.k8s.io/v1beta1
+apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
   name: flux-system
@@ -24,4 +24,4 @@ spec:
   prune: true
   sourceRef:
     kind: GitRepository
-    name: bel-examples
+    name: flux-system
