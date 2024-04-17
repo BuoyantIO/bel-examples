@@ -16,4 +16,4 @@ spec:
       sourceRef:
         kind: HelmRepository
         name: linkerd-oss
-        namespace: linkerds # This is a required value for the Linkerd control plane to use the external CA
+        namespace: linkerd # This is a required value for the Linkerd control plane to use the external CA
