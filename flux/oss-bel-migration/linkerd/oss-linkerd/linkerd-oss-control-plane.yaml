@@ -21,4 +21,4 @@ spec:
     identity:
       externalCA: true
       issuer:
-        scheme: kubernetes.io/tls# This is a required value for the Linkerd control plane to use the external CA
+        scheme: kubernetes.io/tls # This is a required value for the Linkerd control plane to use the external CA
