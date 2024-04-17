@@ -7,6 +7,6 @@ spec:
   interval: 1m
   sourceRef:
     kind: GitRepository
-    name: bel-examples
+    name: flux-system
   path: flux/infra/cert-manager/
   prune: true
