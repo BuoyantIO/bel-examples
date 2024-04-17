@@ -7,6 +7,6 @@ spec:
   interval: 1m
   sourceRef:
     kind: GitRepository
-    name: linkerd-oss
+    name: flux-system
   path: linkerd/flux/linkerd-control-plane/*
   prune: true
