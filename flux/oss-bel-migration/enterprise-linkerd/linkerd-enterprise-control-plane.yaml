@@ -1,0 +1,22 @@
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: linkerd-control-plane
+  namespace: linkerd
+spec:
+  install:
+    createNamespace: false
+    remediation:
+      retries: -1
+  interval: 1m
+  chart:
+    spec:
+      chart: linkerd-enterprise-control-plane
+      version: "2.15.2"
+      sourceRef:
+        kind: HelmRepository
+        name: linkerd-enterprise
+        namespace: linkerd
+  values:
+    - identity.externalCA=true # This is a required value for the Linkerd control plane to use the external CA
+    - identity.issuer.scheme=kubernetes.io/tls # This is a required value for the Linkerd control plane to use the external CA
