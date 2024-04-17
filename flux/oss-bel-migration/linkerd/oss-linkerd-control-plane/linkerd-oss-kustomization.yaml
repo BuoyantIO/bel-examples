@@ -1,5 +1,8 @@
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
+metadata:
+  name: linkerd-oss-control-plane
+  namespace: linkerd
 resources:
   - linkerd-oss-control-plane.yaml
   - linkerd-oss-crds.yaml
