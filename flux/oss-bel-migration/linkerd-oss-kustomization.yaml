@@ -8,5 +8,5 @@ spec:
   sourceRef:
     kind: GitRepository
     name: flux-system
-  path: flux/oss-bel-migration/linkerd/oss-linkerd/
+  path: flux/oss-bel-migration/oss-linkerd/
   prune: true
