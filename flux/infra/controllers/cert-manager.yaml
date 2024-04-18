@@ -19,7 +19,7 @@ metadata:
   name: cert-manager
   namespace: cert-manager
 spec:
-  interval: 30m
+  interval: 1m0s
   chart:
     spec:
       chart: cert-manager
@@ -38,7 +38,7 @@ metadata:
   name: trust-manager
   namespace: cert-manager
 spec:
-  interval: 30m
+  interval: 1m0s
   chart:
     spec:
       chart: trust-manager

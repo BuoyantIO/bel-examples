@@ -4,5 +4,7 @@ namespace: linkerd
 resources:
   - namespace.yaml
   - helmrepo.yaml
+  - linkerd-issuers-certs.yaml
+  - linkerd-ca-trust-bundle.yaml
   - helmrelease-linkerd-crds.yaml
   - helmrelease-linkerd-control-plane.yaml
