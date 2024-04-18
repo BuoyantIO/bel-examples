@@ -11,8 +11,6 @@ spec:
   interval: 1m
   chart:
     spec:
-      dependsOn:
-        - name: linkerd-crds
       chart: linkerd-control-plane
       version: "1.16.11"
       sourceRef:
