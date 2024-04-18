@@ -5,12 +5,10 @@ metadata:
   namespace: flux-system
 spec:
   interval: 1m0s
-  dependsOn:
-    - name: infra-configs
   sourceRef:
     kind: GitRepository
     name: flux-system
-  path: ./flux/apps/
+  path: ./flux/apps/*
   prune: true
   wait: true
   timeout: 5m0s
