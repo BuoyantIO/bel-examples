@@ -19,4 +19,5 @@ spec:
         namespace: linkerd-buoyant
   values:
     licenseSecret: buoyant-license
-    metadata.agentName: bel-flux-helm-example
+    metadata:
+      agentName: bel-flux-helm-example

@@ -5,4 +5,4 @@ metadata:
   namespace: linkerd
 spec:
   interval: 1m
-  url: https://buoyant.cloud
+  url: https://helm.buoyant.cloud
