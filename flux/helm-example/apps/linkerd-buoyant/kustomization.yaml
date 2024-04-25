@@ -3,4 +3,5 @@ kind: Kustomization
 resources:
   - namespace.yaml
   - helmrepo.yaml
+  - linkerd-enterprise-secret.yaml
   - helmrelease-linkerd-buoyant.yaml
