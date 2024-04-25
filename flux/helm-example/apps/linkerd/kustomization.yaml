@@ -6,5 +6,6 @@ resources:
   - helmrepo.yaml
   - linkerd-issuers-certs.yaml
   - linkerd-ca-trust-bundle.yaml
+  - linkerd-enterprise-secret.yaml
   - helmrelease-linkerd-crds.yaml
   - helmrelease-linkerd-control-plane.yaml
