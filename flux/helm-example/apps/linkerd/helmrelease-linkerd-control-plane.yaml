@@ -11,14 +11,15 @@ spec:
   interval: 1m
   chart:
     spec:
-      chart: linkerd-control-plane
-      version: "1.16.11"
+      chart: linkerd-enterprise-control-plane
+      version: "2.15.2"
       sourceRef:
         kind: HelmRepository
         name: linkerd
         namespace: linkerd
   values:
-    identity:
-      externalCA: true
-      issuer:
-        scheme: kubernetes.io/tls # This is a required value for the Linkerd control plane to use the external CA
+    linkerd-control-plane:
+      identity:
+        externalCA: true
+        issuer:
+          scheme: kubernetes.io/tls # This is a required value for the Linkerd control plane to use the external CA
