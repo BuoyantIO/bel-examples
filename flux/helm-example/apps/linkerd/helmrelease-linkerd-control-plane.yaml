@@ -18,6 +18,7 @@ spec:
         name: linkerd
         namespace: linkerd
   values:
+    licenseSecret: buoyant-license
     linkerd-control-plane:
       identity:
         externalCA: true
