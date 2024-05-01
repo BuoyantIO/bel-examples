@@ -24,3 +24,37 @@ spec:
         externalCA: true
         issuer:
           scheme: kubernetes.io/tls # This is a required value for the Linkerd control plane to use the external CA
+        additionalEnv: # This line and everything below are a temporary workaround in enterprise-2.15.2 for using licenseSecret with the current helm chart
+          - name: LICENSE
+            valueFrom:
+              secretKeyRef:
+                key: license
+                name: buoyant-enterprise-license
+      destinationController:
+        additionalEnv:
+          - name: LICENSE
+            valueFrom:
+              secretKeyRef:
+                key: license
+                name: buoyant-enterprise-license
+      heartbeat:
+        additionalEnv:
+          - name: LICENSE
+            valueFrom:
+              secretKeyRef:
+                key: license
+                name: custom-license-secret
+      proxyInjector:
+        additionalEnv:
+          - name: LICENSE
+            valueFrom:
+              secretKeyRef:
+                key: license
+                name: buoyant-enterprise-license
+      spValidator:
+        additionalEnv:
+          - name: LICENSE
+            valueFrom:
+              secretKeyRef:
+                key: license
+                name: buoyant-enterprise-license
