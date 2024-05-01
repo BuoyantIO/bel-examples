@@ -9,3 +9,5 @@ resources:
   - linkerd-enterprise-secret.yaml
   - helmrelease-linkerd-crds.yaml
   - helmrelease-linkerd-control-plane.yaml
+patchesStrategicMerge:
+  - patch-licenseSecret-control-plane-hr.yaml
