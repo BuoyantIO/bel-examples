@@ -23,12 +23,6 @@ spec:
   privateKey:
     algorithm: ECDSA
   secretName: linkerd-identity-trust-anchor
-  secretTemplate:
-    annotations:
-      reflector.v1.k8s.emberstack.com/reflection-allowed: "true"
-      reflector.v1.k8s.emberstack.com/reflection-allowed-namespaces: "cert-manager,linkerd"  # Control destination namespaces
-      reflector.v1.k8s.emberstack.com/reflection-auto-enabled: "true" # Auto create reflection for matching namespaces
-      reflector.v1.k8s.emberstack.com/reflection-auto-namespaces: "cert-manager,linkerd" # Control auto-reflection namespaces
 ---
 apiVersion: cert-manager.io/v1
 kind: Issuer
