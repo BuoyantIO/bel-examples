@@ -18,7 +18,7 @@ spec:
         name: linkerd
         namespace: linkerd
   values:
-    licenseSecret: buoyant-license
+    licenseSecret: buoyant-enterprise-license
     linkerd-control-plane:
       identity:
         externalCA: true
@@ -43,7 +43,7 @@ spec:
             valueFrom:
               secretKeyRef:
                 key: license
-                name: custom-license-secret
+                name: buoyant-enterprise-license
       proxyInjector:
         additionalEnv:
           - name: LICENSE
