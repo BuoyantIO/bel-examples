@@ -1,0 +1,24 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: argocd-linkerd-buoyant
+  namespace: argocd
+  finalizers:
+  - resources-finalizer.argocd.argoproj.io
+spec:
+  project: linkerd
+  source:
+    path: examples/argocd/helm-example/apps/linkerd-buoyant
+    repoURL: git@github.com:deusxanima/linkerd_cx.git
+    targetRevision: HEAD
+    directory:
+      jsonnet: {}
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: linkerd-buoyant
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - PruneLast=true

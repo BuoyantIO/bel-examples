@@ -1,0 +1,19 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: linkerd-crds
+  namespace: argocd
+  labels:
+    env: example
+spec:
+  project: linkerd
+  source:
+    chart: linkerd-enterprise-crds
+    repoURL: 'https://helm.buoyant.cloud'
+    targetRevision: 2.15.2
+    helm:
+      valueFiles:
+        - values.yaml
+  destination:
+    server: 'https://kubernetes.default.svc'
+    namespace: linkerd

@@ -1,0 +1,24 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: argocd-linkerd
+  namespace: argocd
+  finalizers:
+  - resources-finalizer.argocd.argoproj.io
+spec:
+  project: linkerd
+  source:
+    path: argocd/helm-example/apps/linkerd-control-plane
+    repoURL: git@github.com:BuoyantIO/bel-examples.git
+    targetRevision: HEAD
+    directory:
+      jsonnet: {}
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: linkerd
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - PruneLast=true

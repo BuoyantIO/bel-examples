@@ -1,0 +1,30 @@
+apiVersion: argoproj.io/v1alpha1
+kind: AppProject
+metadata:
+  name: infra
+  namespace: argocd
+  annotations:
+spec:
+  description: Cluster-wide infrastructure and components
+  destinations:
+  - namespace: cert-manager
+    server: https://kubernetes.default.svc
+  - namespace: argocd
+    server: https://kubernetes.default.svc
+  - namespace: kube-system
+    server: https://kubernetes.default.svc
+  sourceRepos:
+  - git@github.com:BuoyantIO/bel-examples.git
+  - https://charts.jetstack.io
+  # allow to only see application resources from the specified namespace
+  sourceNamespaces:
+    - 'argocd'
+    - 'cert-manager'
+  # Allow all namespaced-scoped resources to be created
+  namespaceResourceWhitelist:
+    - group: '*'
+      kind: '*'
+  # Deny all cluster-scoped resources from being created. Least privilege.
+  clusterResourceWhitelist:
+    - group: '*'
+      kind: '*'
