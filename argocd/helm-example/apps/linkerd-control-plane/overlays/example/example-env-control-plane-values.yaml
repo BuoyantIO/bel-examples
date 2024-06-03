@@ -1,40 +1,43 @@
-licenseSecret: buoyant-enterprise-license
+licenseSecret: buoyant-license # NOTE: the secret needs to be named `buoyant-license` for the Linkerd control plane to automatically pull the license from the secret
 linkerd-control-plane:
   identity:
-    externalCA: true
+    externalCA: true # This is a required value for the Linkerd control plane to use the external CA
     issuer:
-      scheme: kubernetes.io/tls # This is a required value for the Linkerd control plane to use the external CA
-    additionalEnv: # This line and everything below are a temporary workaround in enterprise-2.15.2 for using licenseSecret with the current helm chart
-      - name: LICENSE
+      scheme: kubernetes.io/tls # This is a required value for the Linkerd control plane to automatically pull the issuer cert and key from `linkerd-identity-issuer` secret created via cert-manager
+
+### EVERYTHING BELOW THIS LINE IS NEEDED ONLY IF USING A LICENSE SECRET NAMED SOMETHING OTHER THAN `buoyant-license`, E.G., `buoyant-custom-license` ###
+
+    additionalEnv:
+      - name: BUOYANT_LICENSE
         valueFrom:
           secretKeyRef:
             key: license
-            name: buoyant-enterprise-license
+            name: buoyant-custom-license
   destinationController:
     additionalEnv:
-      - name: LICENSE
+      - name: BUOYANT_LICENSE
         valueFrom:
           secretKeyRef:
             key: license
-            name: buoyant-enterprise-license
+            name: buoyant-custom-license
   heartbeat:
     additionalEnv:
-      - name: LICENSE
+      - name: BUOYANT_LICENSE
         valueFrom:
           secretKeyRef:
             key: license
-            name: buoyant-enterprise-license
+            name: buoyant-custom-license
   proxyInjector:
     additionalEnv:
-      - name: LICENSE
+      - name: BUOYANT_LICENSE
         valueFrom:
           secretKeyRef:
             key: license
-            name: buoyant-enterprise-license
+            name: buoyant-custom-license
   spValidator:
     additionalEnv:
-      - name: LICENSE
+      - name: BUOYANT_LICENSE
         valueFrom:
           secretKeyRef:
             key: license
-            name: buoyant-enterprise-license
+            name: buoyant-custom-license
