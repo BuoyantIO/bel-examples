@@ -93,7 +93,7 @@ Before using these examples, ensure the following prerequisites are met:
 
     Replace `<buoyant_license_value>` with your actual Buoyant license value when creating the secret.
 
-    **Note:** You will need to create a sealed secret in all namespaces where you plan to install Buoyant Enterprise Linkerd components. 
+    **Note:** You will need to create a sealed secret in all namespaces where you plan to install Buoyant Enterprise Linkerd components.
 
 ## Usage
 
