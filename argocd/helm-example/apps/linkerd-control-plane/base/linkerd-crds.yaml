@@ -10,7 +10,7 @@ spec:
   source:
     chart: linkerd-enterprise-crds
     repoURL: 'https://helm.buoyant.cloud'
-    targetRevision: 2.15.2
+    targetRevision: 2.15.3
     helm:
       valueFiles:
         - values.yaml
