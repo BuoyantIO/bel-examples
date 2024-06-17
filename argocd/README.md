@@ -1,7 +1,3 @@
-Certainly! Here's a revised README tailored for your ArgoCD directory structure:
-
----
-
 # ArgoCD Examples
 
 This directory showcases best practices for using ArgoCD to deploy and manage Linkerd and related Kubernetes resources using GitOps workflows.

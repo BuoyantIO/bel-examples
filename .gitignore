@@ -1,2 +1,2 @@
-#flux/oss-bel-migration/linkerd/enterprise-linkerd/
 *.DS_Store
+terraform/environments/example/.terraform*

@@ -10,7 +10,7 @@ spec:
   source:
     - repoURL: 'https://helm.buoyant.cloud'
       chart: linkerd-enterprise-control-plane
-      targetRevision: 2.15.3
+      targetRevision: 2.15.4
   destination:
     namespace: linkerd
     server: https://kubernetes.default.svc
