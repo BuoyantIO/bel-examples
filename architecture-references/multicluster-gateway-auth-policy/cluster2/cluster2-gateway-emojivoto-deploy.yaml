@@ -1,0 +1,107 @@
+# This deploys the linkerd-gateway-emojivoto service in the linkerd-multicluster namespace in cluster2.
+# This service will be used to route traffic from the web-cluster1-app service in the emojivoto namespace in cluster1.
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: linkerd-gateway-emojivoto
+  namespace: linkerd-multicluster
+  labels:
+    app: linkerd-gateway-emojivoto
+    linkerd.io/extension: multicluster
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: linkerd-gateway-emojivoto
+  namespace: linkerd-multicluster
+  annotations:
+    component: gateway
+    mirror.linkerd.io/gateway-identity: linkerd-gateway-emojivoto.linkerd-multicluster.serviceaccount.identity.linkerd.cluster.local
+    mirror.linkerd.io/multicluster-gateway: "true"
+    mirror.linkerd.io/probe-path: /ready
+    mirror.linkerd.io/probe-period: "3"
+  labels:
+    app: linkerd-gateway-emojivoto
+    linkerd.io/extension: multicluster
+spec:
+  externalTrafficPolicy: Cluster
+  internalTrafficPolicy: Cluster
+  ipFamilies:
+  - IPv4
+  ipFamilyPolicy: SingleStack
+  ports:
+  - name: mc-gateway
+    nodePort: 30883
+    port: 4143
+    protocol: TCP
+    targetPort: 4143
+  - name: mc-probe
+    nodePort: 32056
+    port: 4191
+    protocol: TCP
+    targetPort: 4191
+  selector:
+    app: linkerd-gateway-emojivoto
+  sessionAffinity: None
+  type: LoadBalancer
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: linkerd-gateway-emojivoto
+  namespace: linkerd-multicluster
+  labels:
+    app: linkerd-gateway-emojivoto
+    app.kubernetes.io/name: gateway
+    app.kubernetes.io/part-of: Linkerd
+    app.kubernetes.io/version: enterprise-2.15.2
+    component: gateway
+    linkerd.io/extension: multicluster
+spec:
+  progressDeadlineSeconds: 600
+  replicas: 1
+  revisionHistoryLimit: 10
+  selector:
+    matchLabels:
+      app: linkerd-gateway-emojivoto
+  strategy:
+    rollingUpdate:
+      maxSurge: 25%
+      maxUnavailable: 25%
+    type: RollingUpdate
+  template:
+    metadata:
+      annotations:
+        cluster-autoscaler.kubernetes.io/safe-to-evict: "true"
+        config.linkerd.io/default-inbound-policy: all-authenticated
+        config.linkerd.io/enable-gateway: "true"
+        config.linkerd.io/proxy-require-identity-inbound-ports: "4143"
+        linkerd.io/inject: enabled
+      labels:
+        app: linkerd-gateway-emojivoto
+        linkerd.io/extension: multicluster
+    spec:
+      containers:
+      - image: gcr.io/google_containers/pause:3.2
+        imagePullPolicy: IfNotPresent
+        name: pause
+        securityContext:
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop:
+            - ALL
+          readOnlyRootFilesystem: true
+          runAsNonRoot: true
+          runAsUser: 2103
+          seccompProfile:
+            type: RuntimeDefault
+        terminationMessagePath: /dev/termination-log
+        terminationMessagePolicy: File
+      dnsPolicy: ClusterFirst
+      restartPolicy: Always
+      schedulerName: default-scheduler
+      securityContext:
+        seccompProfile:
+          type: RuntimeDefault
+      serviceAccountName: linkerd-gateway-emojivoto
+      terminationGracePeriodSeconds: 30

@@ -1,0 +1,38 @@
+# This file contains "empty" (i.e., no selector) Services which are used by Linkerd
+# in conjunction with HTTPRoute Rewrite rules to route traffic to the appropriate
+# mirrored services in the same namespace.  
+apiVersion: v1
+kind: Service
+metadata:
+  name: server
+  namespace: backend
+spec:
+  ports:
+    - port: 80
+      targetPort: 80
+      protocol: TCP
+  selector: {}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: emoji-svc
+  namespace: emojivoto
+spec:
+  ports:
+    - port: 8080
+      targetPort: 8080
+      protocol: TCP
+  selector: {}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: voting-svc
+  namespace: emojivoto
+spec:
+  ports:
+    - port: 8080
+      targetPort: 8080
+      protocol: TCP
+  selector: {}

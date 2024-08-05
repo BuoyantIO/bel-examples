@@ -1,0 +1,149 @@
+# Description: This is a sample manifest file for deploying the emojivoto backend services in a Kubernetes cluster.
+# The backend services include the emoji service and the voting service.
+# The manifest file includes the following resources:
+# - a namespace called `emojivoto`
+# - service accounts for the emoji service and the voting service
+# - services for the emoji service and the voting service
+# - deployments for the emoji service and the voting service
+# The emoji service provides a list of emojis that users can vote on.
+# The voting service stores the votes and provides the current vote count.
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: emojivoto
+  annotations:
+    linkerd.io/inject: enabled
+---
+# EMOJI-SVC SERVICE ACCOUNT
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: emoji
+  namespace: emojivoto
+---
+# VOTING-SVC SERVICE ACCOUNT
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: voting
+  namespace: emojivoto
+---
+# EMOJI-SVC SERVICE
+apiVersion: v1
+kind: Service
+metadata:
+  name: emoji-svc
+  namespace: emojivoto
+  labels:
+    mirror.linkerd.io/export-svcs: emojivoto
+spec:
+  ports:
+  - name: grpc
+    port: 8080
+    targetPort: 8080
+  - name: prom
+    port: 8801
+    targetPort: 8801
+  selector:
+    app: emoji-svc
+---
+# VOTING-SVC SERVICE
+apiVersion: v1
+kind: Service
+metadata:
+  name: voting-svc
+  namespace: emojivoto
+  labels:
+    mirror.linkerd.io/export-svcs: emojivoto
+spec:
+  ports:
+  - name: grpc
+    port: 8080
+    targetPort: 8080
+  - name: prom
+    port: 8801
+    targetPort: 8801
+  selector:
+    app: voting-svc
+---
+# EMOJI-SVC DEPLOYMENT
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app.kubernetes.io/name: emoji
+    app.kubernetes.io/part-of: emojivoto
+    app.kubernetes.io/version: v11
+  name: emoji
+  namespace: emojivoto
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: emoji-svc
+      version: v11
+  template:
+    metadata:
+      labels:
+        app: emoji-svc
+        version: v11
+    spec:
+      containers:
+      - env:
+        - name: GRPC_PORT
+          value: "8080"
+        - name: PROM_PORT
+          value: "8801"
+        image: docker.l5d.io/buoyantio/emojivoto-emoji-svc:v11
+        name: emoji-svc
+        ports:
+        - containerPort: 8080
+          name: grpc
+        - containerPort: 8801
+          name: prom
+        resources:
+          requests:
+            cpu: 100m
+      serviceAccountName: emoji
+---
+# VOTING-SVC DEPLOYMENT
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app.kubernetes.io/name: voting
+    app.kubernetes.io/part-of: emojivoto
+    app.kubernetes.io/version: v11
+  name: voting
+  namespace: emojivoto
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: voting-svc
+      version: v11
+  template:
+    metadata:
+      labels:
+        app: voting-svc
+        version: v11
+    spec:
+      containers:
+      - env:
+        - name: GRPC_PORT
+          value: "8080"
+        - name: PROM_PORT
+          value: "8801"
+        image: docker.l5d.io/buoyantio/emojivoto-voting-svc:v11
+        name: voting-svc
+        ports:
+        - containerPort: 8080
+          name: grpc
+        - containerPort: 8801
+          name: prom
+        resources:
+          requests:
+            cpu: 100m
+      serviceAccountName: voting
+---
