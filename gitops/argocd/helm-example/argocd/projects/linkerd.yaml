@@ -1,0 +1,31 @@
+apiVersion: argoproj.io/v1alpha1
+kind: AppProject
+metadata:
+  name: linkerd
+  namespace: argocd
+  annotations:
+spec:
+  description: Linkerd infrastructure and components
+  destinations:
+  - namespace: linkerd
+    server: https://kubernetes.default.svc
+  - namespace: linkerd-buoyant
+    server: https://kubernetes.default.svc
+  - namespace: argocd
+    server: https://kubernetes.default.svc
+  sourceRepos:
+  - git@github.com:BuoyantIO/bel-examples.git
+  - https://helm.buoyant.cloud 
+  # allow to only see application resources from the specified namespace
+  sourceNamespaces:
+    - 'argocd'
+    - 'linkerd'
+    - 'linkerd-buoyant'
+  # Allow all namespaced-scoped resources to be created
+  namespaceResourceWhitelist:
+    - group: '*'
+      kind: '*'
+  # Deny all cluster-scoped resources from being created. Least privilege.
+  clusterResourceWhitelist:
+    - group: '*'
+      kind: '*'
