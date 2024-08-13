@@ -1,0 +1,64 @@
+# Description: This is a sample manifest file for deploying an echo-http-https server backend service to a Kubernetes cluster.
+# The backend service is a simple service that echoes the request headers and body back to the client.
+# The manifest file includes the following resources:
+# - namespace called `backend`
+# - service account for the server service
+# - deployment for the server service
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: backend
+  annotations:
+    linkerd.io/inject: enabled
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: server
+  namespace: backend
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: server
+  namespace: backend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: server
+  template:
+    metadata:
+      labels:
+        app: server
+    spec:
+      containers:
+      - name: echo
+        image: mendhak/http-https-echo:31
+        ports:
+        - containerPort: 8080
+        - containerPort: 8443
+      serviceAccountName: server
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: server
+  namespace: backend
+  labels:
+    mirror.linkerd.io/export-svcs: app
+spec:
+  type: ClusterIP
+  selector:
+    app: server
+  ports:
+  - protocol: TCP
+    port: 8080
+    targetPort: 8080
+    name: http
+  - protocol: TCP
+    port: 8443
+    targetPort: 8443
+    name: https
+

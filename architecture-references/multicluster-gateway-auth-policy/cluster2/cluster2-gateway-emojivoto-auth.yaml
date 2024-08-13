@@ -1,0 +1,66 @@
+
+apiVersion: policy.linkerd.io/v1beta2
+kind: Server
+metadata:
+  generation: 1
+  labels:
+    app: linkerd-gateway-emojivoto
+    linkerd.io/extension: multicluster
+  name: linkerd-gateway-emojivoto
+  namespace: linkerd-multicluster
+spec:
+  podSelector:
+    matchLabels:
+      app: linkerd-gateway-emojivoto
+  port: linkerd-proxy
+  proxyProtocol: unknown
+--- 
+apiVersion: policy.linkerd.io/v1alpha1
+kind: MeshTLSAuthentication
+metadata:
+  labels:
+    app: linkerd-gateway-emojivoto
+    linkerd.io/extension: multicluster
+  name: any-meshed
+  namespace: linkerd-multicluster
+spec:
+  identities:
+  - '*'
+--- 
+apiVersion: policy.linkerd.io/v1alpha1
+kind: NetworkAuthentication
+metadata:
+  labels:
+    app: linkerd-gateway-emojivoto
+    app.kubernetes.io/managed-by: Helm
+    linkerd.io/extension: multicluster
+  name: source-cluster
+  namespace: linkerd-multicluster
+spec:
+  networks:
+  - cidr: 0.0.0.0/0
+  - cidr: ::/0
+--- 
+apiVersion: policy.linkerd.io/v1alpha1
+kind: AuthorizationPolicy
+metadata:
+  labels:
+    app: linkerd-gateway-emojivoto
+    linkerd.io/extension: multicluster
+  name: linkerd-gateway-emojivoto
+  namespace: linkerd-multicluster
+spec:
+  requiredAuthenticationRefs:
+  - group: policy.linkerd.io
+    kind: MeshTLSAuthentication
+    name: any-meshed
+    namespace: linkerd-multicluster
+  - group: policy.linkerd.io
+    kind: NetworkAuthentication
+    name: source-cluster
+    namespace: linkerd-multicluster
+  targetRef:
+    group: policy.linkerd.io
+    kind: Server
+    name: linkerd-gateway-emojivoto
+---

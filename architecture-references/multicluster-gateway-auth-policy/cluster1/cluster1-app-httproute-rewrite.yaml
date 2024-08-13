@@ -1,0 +1,27 @@
+# This file rewrites the HTTPRoute object for the cluster1-app service in the backend namespace 
+# to route to the server-cluster2-app service in the backend namespace. This enables seemless routing from
+# the client's perspective - the client does not have to make any fqdn or outbound call changes.
+apiVersion: gateway.networking.k8s.io/v1beta1
+kind: HTTPRoute
+metadata:
+  name: gateway-cluster2-app
+  namespace: backend
+spec:
+  parentRefs:
+  - group: core
+    kind: Service
+    name: server
+    namespace: backend
+    port: 8080
+  rules:
+  - backendRefs:
+    - group: ""
+      kind: Service
+      name: server-cluster2-app
+      namespace: backend
+      port: 8080
+      weight: 100
+    matches:
+    - path:
+        type: PathPrefix
+        value: /

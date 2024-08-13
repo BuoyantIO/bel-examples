@@ -1,0 +1,56 @@
+# Description: This is a sample manifest file for deploying a client frontend service to a Kubernetes cluster.
+# The client service is a simple service that forwards traffic to the backend server service.
+# The manifest file includes the following resources:
+# - namespace called `frontend`
+# - service account for the client service
+# - deployment for the client service
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: frontend
+  annotations:
+    linkerd.io/inject: enabled
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: client
+  namespace: frontend
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: client
+  namespace: frontend
+spec:
+  selector:
+    matchLabels:
+      app: client
+  template:
+    metadata:
+      labels:
+        app: client
+    spec:
+      serviceAccountName: client
+      containers:
+      - name: socat
+        image: alpine/socat
+        ports:
+        - containerPort: 80
+        command: ["sh", "-c", "socat TCP-LISTEN:80,fork,reuseaddr TCP:server.backend.svc:8080"]
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: client
+  namespace: frontend
+spec:
+  selector:
+    app: client
+  ports:
+  - protocol: TCP
+    port: 80
+    targetPort: 80
+  type: LoadBalancer
+

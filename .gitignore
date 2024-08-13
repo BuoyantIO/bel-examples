@@ -1,2 +1,4 @@
 *.DS_Store
-terraform/environments/example/.terraform*
+gitops/terraform/environments/example/.terraform*
+gitops/terraform/environments/example/.terraform.lock.hcl
+

@@ -1,0 +1,55 @@
+# This file rewrites the HTTPRoute object for the emojivoto emoji and voting service in the emojivoto namespace 
+# to route to the emoji-cluster2 and voting-cluster2 services in the emojivoto namespace. This enables seemless routing from
+# the client's perspective - the client does not have to make any fqdn or outbound call changes.
+apiVersion: gateway.networking.k8s.io/v1beta1
+kind: HTTPRoute
+metadata:
+  name: gateway-cluster2-emoji
+  namespace: emojivoto
+spec:
+  parentRefs:
+  - group: core
+    kind: Service
+    name: emoji-svc
+    namespace: emojivoto
+    port: 8080
+  rules:
+  - backendRefs:
+    - group: ""
+      kind: Service
+      name: emoji-svc-cluster2-emojivoto
+      namespace: emojivoto
+      port: 8080
+      weight: 100
+    matches:
+    - path:
+        type: PathPrefix
+        value: /
+---
+# This file rewrites the HTTPRoute object for the emojivoto emoji and voting service in the emojivoto namespace 
+# to route to the emoji-cluster2 and voting-cluster2 services in the emojivoto namespace. This enables seemless routing from
+# the client's perspective - the client does not have to make any fqdn or outbound call changes.
+apiVersion: gateway.networking.k8s.io/v1beta1
+kind: HTTPRoute
+metadata:
+  name: gateway-cluster2-voting
+  namespace: emojivoto
+spec:
+  parentRefs:
+  - group: core
+    kind: Service
+    name: voting-svc
+    namespace: emojivoto
+    port: 8080
+  rules:
+  - backendRefs:
+    - group: ""
+      kind: Service
+      name: voting-svc-cluster2-emojivoto
+      namespace: emojivoto
+      port: 8080
+      weight: 100
+    matches:
+    - path:
+        type: PathPrefix
+        value: /

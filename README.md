@@ -6,13 +6,13 @@ Welcome to our Buoyant Enterprise Linkerd examples repository, showcasing best p
 
 - [Introduction](#introduction)
 - [Folder Structure](#folder-structure)
-- [Examples](#examples)
+- [Gitops](#gitops)
   - [ArgoCD](#argocd)
   - [Flux](#flux)
-    - [Buoyant Cloud & Buoyant Operator Example](#buoyant-operator-example)
-    - [Helm Example](#helm-example)
-  - [Linkerd TLS Automation Examples](#linkerd-tls-automation-examples)
   - [Terraform](#terraform)
+- [Linkerd TLS Automation Examples](#linkerd-tls-automation-examples)
+- [Architecture References](#architecture-references)
+  - [Multicluster Gateway Auth Policy](#multicluster-gateway-auth-policy)
 - [Getting Started](#getting-started)
 - [Contributing](#contributing)
 - [License](#license)
@@ -21,29 +21,29 @@ Welcome to our Buoyant Enterprise Linkerd examples repository, showcasing best p
 
 In this repository, we demonstrate various deployment patterns and configurations for managing Kubernetes resources using GitOps practices with commong CD tools including ArgoCD, Flux, and Terraform. Additionally, we provide best practice examples of integrating and automating service mesh configurations with Linkerd for at-scale enterprise environments.
 
-## Examples
+## Gitops
 
 ### ArgoCD
 
-The `argocd` directory contains examples of ArgoCD application manifests for deploying and managing Kubernetes resources.
+The `argocd` directory contains examples of ArgoCD application manifests for deploying and managing Linkerd Kubernetes resources.
 
 ### Flux
 
-#### Buoyant Cloud & Buoyant Operator Example
-
-The `buoyant-operator-example` directory showcases how to use Flux to manage the deployment of Buoyant Cloud and/or the [Buoyant Lifecycle Operator](https://docs.buoyant.io/buoyant-enterprise-linkerd/latest/features/operator/).
-
-#### Helm Example
-
-The `helm-example` directory provides Flux configurations for deploying applications using Helm releases, organized into different categories.
-
-### Linkerd TLS Automation Examples
-
-This directory houses example issuer, cert, and configuration files to automate TLS management for Linkerd service mesh deployments.
+The `flux` directory contains examples of Flux application manifests and kustomize files for deploying and managing Linkerd Kubernetes resources.
 
 ### Terraform
 
 The `terraform` directory includes Terraform configurations for provisioning Kubernetes clusters and associated infrastructure.
+
+## Linkerd TLS Automation Examples
+
+This directory houses example issuer, cert, and configuration files to automate TLS management for Linkerd service mesh deployments.
+
+## Architecture References
+
+### Multicluster Gateway Auth Policy
+
+This directory houses configuration examples showcasing how Linkerd's authorization policies can be configured granularly using multicluster gateway mode to achieve zero-trust security and least-priviledged app access segmentation across separate clusters.
 
 ## Getting Started
 

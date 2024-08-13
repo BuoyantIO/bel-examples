@@ -1,0 +1,154 @@
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  annotations:
+    linkerd.io/created-by: linkerd/helm stable-2.14.10
+    meta.helm.sh/release-name: linkerd-multicluster-emojivoto
+    meta.helm.sh/release-namespace: linkerd-multicluster
+  creationTimestamp: "2024-05-20T21:36:06Z"
+  generation: 1
+  labels:
+    app.kubernetes.io/managed-by: Helm
+    linkerd.io/extension: multicluster
+  name: links.multicluster.linkerd.io
+  resourceVersion: "30979"
+  uid: 94cc0d39-6756-40d0-b9b2-b8f83adda15d
+spec:
+  conversion:
+    strategy: None
+  group: multicluster.linkerd.io
+  names:
+    kind: Link
+    listKind: LinkList
+    plural: links
+    singular: link
+  scope: Namespaced
+  versions:
+  - name: v1alpha1
+    schema:
+      openAPIV3Schema:
+        properties:
+          spec:
+            properties:
+              clusterCredentialsSecret:
+                description: Kubernetes secret of target cluster
+                type: string
+              gatewayAddress:
+                description: Gateway address of target cluster
+                type: string
+              gatewayIdentity:
+                description: Gateway Identity FQDN
+                type: string
+              gatewayPort:
+                description: Gateway Port
+                type: string
+              probeSpec:
+                description: Spec for gateway health probe
+                properties:
+                  path:
+                    description: Path of remote gateway health endpoint
+                    type: string
+                  period:
+                    description: Interval in between probe requests
+                    type: string
+                  port:
+                    description: Port of remote gateway health endpoint
+                    type: string
+                type: object
+              remoteDiscoverySelector:
+                description: Selector for Services to mirror in remote discovery mode
+                properties:
+                  matchExpressions:
+                    description: List of selector requirements
+                    items:
+                      description: A selector item requires a key and an operator
+                      properties:
+                        key:
+                          description: Label key that selector should apply to
+                          type: string
+                        operator:
+                          description: Evaluation of a label in relation to set
+                          enum:
+                          - In
+                          - NotIn
+                          - Exists
+                          - DoesNotExist
+                          type: string
+                        values:
+                          items:
+                            type: string
+                          type: array
+                      required:
+                      - key
+                      - operator
+                      type: object
+                    type: array
+                  matchLabels:
+                    type: object
+                    x-kubernetes-preserve-unknown-fields: true
+                type: object
+              selector:
+                description: Kubernetes Label Selector
+                properties:
+                  matchExpressions:
+                    description: List of selector requirements
+                    items:
+                      description: A selector item requires a key and an operator
+                      properties:
+                        key:
+                          description: Label key that selector should apply to
+                          type: string
+                        operator:
+                          description: Evaluation of a label in relation to set
+                          enum:
+                          - In
+                          - NotIn
+                          - Exists
+                          - DoesNotExist
+                          type: string
+                        values:
+                          items:
+                            type: string
+                          type: array
+                      required:
+                      - key
+                      - operator
+                      type: object
+                    type: array
+                  matchLabels:
+                    type: object
+                    x-kubernetes-preserve-unknown-fields: true
+                type: object
+              targetClusterDomain:
+                description: Domain name of target cluster to link to
+                type: string
+              targetClusterLinkerdNamespace:
+                description: Name of namespace Linkerd control plane is installed
+                  in on target cluster
+                type: string
+              targetClusterName:
+                description: Name of target cluster to link to
+                type: string
+            type: object
+        type: object
+    served: true
+    storage: true
+status:
+  acceptedNames:
+    kind: Link
+    listKind: LinkList
+    plural: links
+    singular: link
+  conditions:
+  - lastTransitionTime: "2024-05-20T21:36:06Z"
+    message: no conflicts found
+    reason: NoConflicts
+    status: "True"
+    type: NamesAccepted
+  - lastTransitionTime: "2024-05-20T21:36:06Z"
+    message: the initial names have been accepted
+    reason: InitialNamesAccepted
+    status: "True"
+    type: Established
+  storedVersions:
+  - v1alpha1
