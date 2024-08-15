@@ -1,0 +1,8 @@
+apiVersion: linkerd.buoyant.io/v1alpha1
+kind: DataPlane
+metadata:
+  name: linkerd-dataplane-config
+  namespace: linkerd-buoyant
+  spec:
+    workloadSelector:
+      matchLabels: {}
