@@ -2,12 +2,21 @@
 
 This directory showcases best practices for using ArgoCD to deploy and manage Linkerd and related Kubernetes resources using GitOps workflows.
 
+
+## Recommended ArgoCD Setup
+
+When deploying Buoyant Enterprise for Linkerd, note that the Buoyant Enterprise Lifecycle Operator internally uses `helm apply` rather than `helm template` and `kubectl apply` on the resulting manifests. Therefore, it is recommended to configure ArgoCD in the following way:
+
+- **Separate ArgoCD Applications For ControlPlane and DataPlane**: Create the Linkerd Control Plane as a dedicated ArgoCD application (linkerd-control-plane), and configure a separate ArgoCD application (linkerd-buoyant)for Buoyant Enterprise components such as [Buoyant Cloud](https://docs.buoyant.io/buoyant-cloud/getting-started/) and/or the [DataPlane Operator](https://docs.buoyant.io/buoyant-enterprise-linkerd/latest/reference/operator/#data-plane-configuration).
+- **Buoyant Enterprise Usage**: Use the Buoyant Enterprise application primarily for managing the Buoyant Enterprise DataPlane Operator for easy meshing and rotation of namespaces and workloads, 
+
+The examples in this directory follow this structure.
+
 ## Directory Structure
 
 The `argocd` directory is organized as follows:
 
 ```
-├── buoyant-operator-example
 └── helm-example
     ├── apps
     │   ├── cert-manager
@@ -18,6 +27,17 @@ The `argocd` directory is organized as follows:
     │   │   ├── ns.yaml
     │   │   └── overlays
     │   │       └── example
+    │   ├── linkerd-buoyant
+    │   │   ├── base
+    │   │   │   ├── linkerd-buoyant-enterprise-secret.yaml
+    │   │   │   └── linkerd-buoyant.yaml
+    │   │   ├── kustomization.yaml
+    │   │   ├── ns.yaml
+    │   │   └── overlays
+    │   │       └── example
+    │   │           └── dataplane-mesh-configs
+    │   │               ├── mesh-ns-emojivoto.yaml
+    │   │               └── mesh-ns-linkerd-buoyant.yaml
     │   └── linkerd-control-plane
     │       ├── base
     │       │   ├── certs
@@ -47,6 +67,8 @@ The `argocd` directory is organized as follows:
 - **helm-example**: Includes Helm-based configurations for deploying Buoyant Enterprise Linkerd components and related resources with ArgoCD.
     - **apps**: Contains ArgoCD application definitions, manifests, and related resources.
     - **cert-manager**: Contains configurations for Cert-Manager resources.
+    - **linkerd-buoyant**: Contains configurations for Buoyant Enterprise DataPlane Operator resources.
+    - **linkerd-control-plane**: Contains configurations for Linkerd Control Plane resources.
     - **argocd**: Includes ArgoCD app-of-apps application definitions and project configurations.
 
 ## Prerequisites
@@ -89,7 +111,7 @@ Before using these examples, ensure the following prerequisites are met:
 
     Replace `<buoyant_license_value>` with your actual Buoyant license value when creating the secret.
 
-    **Note:** You will need to create a sealed secret in all namespaces where you plan to install Buoyant Enterprise Linkerd components.
+    **Note:** You will need to create a sealed secret for all namespaces where you plan to install Buoyant Enterprise Linkerd components, including linkerd and linkerd-buoyant namespaces.
 
 ## Usage
 

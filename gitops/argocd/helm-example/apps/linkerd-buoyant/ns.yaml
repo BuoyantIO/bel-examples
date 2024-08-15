@@ -1,0 +1,8 @@
+kind: Namespace
+apiVersion: v1
+metadata:
+  name: linkerd-buoyant
+  annotations:
+    linkerd.io/inject: enabled
+  labels:
+    linkerd.io/control-plane-ns: linkerd
