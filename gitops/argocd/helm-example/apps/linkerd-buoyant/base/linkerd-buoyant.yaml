@@ -1,0 +1,26 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: linkerd-control-plane
+  namespace: argocd
+  labels:
+    env: example
+spec:
+  project: linkerd
+  source:
+    - repoURL: 'https://helm.buoyant.cloud'
+      chart: linkerd-buoyant
+      targetRevision: 0.31.0
+      helm:
+        parameters:
+          - name: licenseSecret
+            value: buoyant-license
+          - name: dataPlaneOperator.enabled
+            value: true
+          - name: controlPlaneOperator.enabled
+            value: false
+          - name: buoyantCloudEnabled
+            value: false
+  destination:
+    namespace: linkerd-buoyant
+    server: https://kubernetes.default.svc

@@ -10,3 +10,4 @@ resources:
   - projects/linkerd.yaml
   - apps/cert-manager.yaml
   - apps/linkerd.yaml
+  - apps/linkerd-buoyant.yaml
