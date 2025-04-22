@@ -1,0 +1,97 @@
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: linkerd-enterprise-crds
+  namespace: argo-cd
+spec:
+  generators:
+    - list:
+        elements:
+          - cluster: in-cluster
+            url: "https://kubernetes.default.svc"
+            values:
+              env: local
+              targetRevision: 2.17.1
+  syncPolicy:
+    applicationsSync: create-update
+    preserveResourcesOnDeletion: true
+  template:
+    metadata:
+      labels:
+        cluster: "{{ cluster }}"
+        app: linkerd
+      name: "linkerd-enterprise-crds-{{ cluster }}"
+    spec:
+      project: default
+      source:
+        repoURL: https://helm.buoyant.cloud
+        chart: linkerd-enterprise-crds
+        targetRevision: "{{ values.targetRevision }}"
+        helm:
+          releaseName: linkerd-enterprise-crds
+      syncPolicy:
+        automated:
+          selfHeal: true
+          prune: true
+        syncOptions:
+          - ServerSideApply=true
+          - RespectIgnoreDifferences=true
+          - Replace=true
+          - ApplyOutOfSyncOnly=true
+      destination:
+        server: "{{ url }}"
+        namespace: "linkerd"
+---
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: linkerd-enterprise-control-plane
+  namespace: argo-cd
+spec:
+  generators:
+    - list:
+        elements:
+          - cluster: in-cluster
+            url: "https://kubernetes.default.svc"
+            values:
+              env: local
+              targetRevision: 2.17.1
+  syncPolicy:
+    applicationsSync: create-update
+    preserveResourcesOnDeletion: true
+  template:
+    metadata:
+      labels:
+        cluster: "{{cluster}}"
+        app: linkerd
+      name: "linkerd-enterprise-control-plane-{{cluster}}"
+    spec:
+      project: default
+      source:
+        repoURL: https://helm.buoyant.cloud
+        chart: linkerd-enterprise-control-plane
+        targetRevision: "{{ values.targetRevision }}"
+        helm:
+          parameters:
+            - name: license
+              value: PLACEHOLDER_LICENSE
+            - name: identityTrustAnchorsPEM
+              value: |
+                PLACEHOLDER_TRUST_ANCHOR
+            - name: identity.issuer.scheme
+              value: linkerd.io/tls
+            - name: identity.issuer.tls.crtPEM
+              value: |
+                PLACEHOLDER_ISSUER_CRT
+            - name: identity.issuer.tls.keyPEM
+              value: |
+                PLACEHOLDER_ISSUER_KEY
+      syncPolicy:
+        automated:
+          selfHeal: true
+          prune: true
+        syncOptions:
+          - CreateNamespace=true
+      destination:
+        server: "{{ url }}"
+        namespace: "linkerd"
