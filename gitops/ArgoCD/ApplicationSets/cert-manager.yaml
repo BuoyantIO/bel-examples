@@ -1,0 +1,97 @@
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: cert-manager
+  namespace: argo-cd
+spec:
+  generators:
+    - list:
+        elements:
+          - cluster: in-cluster
+            url: "https://kubernetes.default.svc"
+            values:
+              env: local
+              targetRevision: v1.13.3
+  syncPolicy:
+    applicationsSync: create-update
+    preserveResourcesOnDeletion: true
+  template:
+    metadata:
+      labels:
+        cluster: "{{ cluster }}"
+        app: cert-manager
+      name: "cert-manager-{{ cluster }}"
+    spec:
+      project: default
+      source:
+        repoURL: https://charts.jetstack.io
+        chart: cert-manager
+        targetRevision: "{{ values.targetRevision }}"
+        helm:
+          releaseName: cert-manager
+          parameters:
+            - name: crds.enabled
+              value: "true"
+            - name: installCRDs
+              value: "true"
+      syncPolicy:
+        automated:
+          selfHeal: true
+          prune: true
+        syncOptions:
+          - ServerSideApply=true
+          - RespectIgnoreDifferences=true
+          - Replace=true
+          - ApplyOutOfSyncOnly=true
+          - CreateNamespace=true
+      destination:
+        server: "{{ url }}"
+        namespace: cert-manager
+---
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: trust-manager
+  namespace: argo-cd
+spec:
+  generators:
+    - list:
+        elements:
+          - cluster: in-cluster
+            url: "https://kubernetes.default.svc"
+            values:
+              env: local
+              targetRevision: v0.7.1
+  syncPolicy:
+    applicationsSync: create-update
+    preserveResourcesOnDeletion: true
+  template:
+    metadata:
+      labels:
+        cluster: "{{ cluster }}"
+        app: trust-manager
+      name: "trust-manager-{{ cluster }}"
+    spec:
+      project: default
+      source:
+        repoURL: https://charts.jetstack.io
+        chart: trust-manager
+        targetRevision: "{{ values.targetRevision }}"
+        helm:
+          releaseName: trust-manager
+          parameters:
+            - name: app.trust.namespace
+              value: cert-manager
+      syncPolicy:
+        automated:
+          selfHeal: true
+          prune: true
+        syncOptions:
+          - ServerSideApply=true
+          - RespectIgnoreDifferences=true
+          - Replace=true
+          - ApplyOutOfSyncOnly=true
+          - CreateNamespace=true
+      destination:
+        server: "{{ url }}"
+        namespace: trust-manager

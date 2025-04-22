@@ -1,0 +1,49 @@
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: linkerd-buoyant
+  namespace: argo-cd
+spec:
+  generators:
+    - list:
+        elements:
+          - cluster: in-cluster
+            url: "https://kubernetes.default.svc"
+            values:
+              env: local
+              targetRevision: 0.34.0
+  syncPolicy:
+    applicationsSync: create-update
+    preserveResourcesOnDeletion: true
+  template:
+    metadata:
+      labels:
+        cluster: "{{cluster}}"
+        app: linkerd-buoyant
+      name: "linkerd-buoyant-{{cluster}}"
+    spec:
+      project: default
+      source:
+        repoURL: https://helm.buoyant.cloud
+        chart: linkerd-buoyant
+        targetRevision: "{{ values.targetRevision }}"
+        helm:
+          parameters:
+            - name: license
+              value: PLACEHOLDER_LICENSE
+            - name: dataPlaneOperator.enabled
+              value: "true"
+            - name: controlPlaneOperator.enabled
+              value: "false"
+            - name: buoyantCloudEnabled
+              value: "false"
+      syncPolicy:
+        automated:
+          selfHeal: true
+          prune: true
+        syncOptions:
+          - CreateNamespace=true
+      destination:
+        server: "{{ url }}"
+        namespace: "linkerd-buoyant"
+
